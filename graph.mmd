@@ -1,0 +1,39 @@
+graph TD
+  node_/net/net.0/Conv["Conv\n/net/net.0/Conv"]
+  node_/net/net.1/Relu["Relu\n/net/net.1/Relu"]
+  node_/net/net.2/MaxPool["MaxPool\n/net/net.2/MaxPool"]
+  node_/net/net.3/Conv["Conv\n/net/net.3/Conv"]
+  node_/net/net.4/Relu["Relu\n/net/net.4/Relu"]
+  node_/net/net.5/MaxPool["MaxPool\n/net/net.5/MaxPool"]
+  node_/net/net.6/Flatten["Flatten\n/net/net.6/Flatten"]
+  node_/net/net.7/Gemm["Gemm\n/net/net.7/Gemm"]
+  node_/net/net.8/Relu["Relu\n/net/net.8/Relu"]
+  node_/net/net.9/Gemm["Gemm\n/net/net.9/Gemm"]
+  input --> node_/net/net.0/Conv
+  net.0.weight --> node_/net/net.0/Conv
+  net.0.bias --> node_/net/net.0/Conv
+  node_/net/net.0/Conv --> /net/net.0/Conv_output_0
+  /net/net.0/Conv_output_0 --> node_/net/net.1/Relu
+  node_/net/net.1/Relu --> /net/net.1/Relu_output_0
+  /net/net.1/Relu_output_0 --> node_/net/net.2/MaxPool
+  node_/net/net.2/MaxPool --> /net/net.2/MaxPool_output_0
+  /net/net.2/MaxPool_output_0 --> node_/net/net.3/Conv
+  net.3.weight --> node_/net/net.3/Conv
+  net.3.bias --> node_/net/net.3/Conv
+  node_/net/net.3/Conv --> /net/net.3/Conv_output_0
+  /net/net.3/Conv_output_0 --> node_/net/net.4/Relu
+  node_/net/net.4/Relu --> /net/net.4/Relu_output_0
+  /net/net.4/Relu_output_0 --> node_/net/net.5/MaxPool
+  node_/net/net.5/MaxPool --> /net/net.5/MaxPool_output_0
+  /net/net.5/MaxPool_output_0 --> node_/net/net.6/Flatten
+  node_/net/net.6/Flatten --> /net/net.6/Flatten_output_0
+  /net/net.6/Flatten_output_0 --> node_/net/net.7/Gemm
+  net.7.weight --> node_/net/net.7/Gemm
+  net.7.bias --> node_/net/net.7/Gemm
+  node_/net/net.7/Gemm --> /net/net.7/Gemm_output_0
+  /net/net.7/Gemm_output_0 --> node_/net/net.8/Relu
+  node_/net/net.8/Relu --> /net/net.8/Relu_output_0
+  /net/net.8/Relu_output_0 --> node_/net/net.9/Gemm
+  net.9.weight --> node_/net/net.9/Gemm
+  net.9.bias --> node_/net/net.9/Gemm
+  node_/net/net.9/Gemm --> output

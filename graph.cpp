@@ -26,6 +26,7 @@ bool Graph::LoadFromONNX(const std::string& onnx_path) {
   // 1. Parse initializer -> TensorMap
   for (const auto &initializer : graph_proto.initializer()) {
     auto tensor = std::make_shared<Tensor>();
+    LOG(INFO) << initializer.name();
     tensor->name = initializer.name();
     tensor->shape = { initializer.dims().begin(), initializer.dims().end()};
     tensor->dataType = onnx::TensorProto_DataType_Name(initializer.data_type());
@@ -33,7 +34,7 @@ bool Graph::LoadFromONNX(const std::string& onnx_path) {
 
     if (initializer.data_type() == onnx::TensorProto::FLOAT) {
       if (initializer.has_raw_data()) {
-        std::cout << "parse_raw_data byte size=" << initializer.raw_data().size() << std::endl;
+        LOG(INFO) << "parse_raw_data byte size=" << initializer.raw_data().size();
         const std::string& raw_data = initializer.raw_data();
         size_t num_elements = 1;
         for (int i = 0; i < initializer.dims_size(); ++i) {
@@ -49,11 +50,11 @@ bool Graph::LoadFromONNX(const std::string& onnx_path) {
         std::memcpy(tensor->floatData.data(), raw_data.data(), raw_data.size());
 
       } else if (initializer.float_data_size() > 0) {
-        std::cout << "parse float_data elem size=" << initializer.float_data_size() << std::endl;
+        LOG(INFO) << "parse float_data elem size=" << initializer.float_data_size();
         tensor->floatData = {initializer.float_data().begin(), initializer.float_data().end()};
 
       } else {
-        std::cout << "parse data type not support" << std::endl;
+        LOG(INFO) << "parse data type not support";
       }
     }
 
@@ -201,7 +202,9 @@ void Graph::Forward() {
   auto orderd_nodes = TopoSort();
   for (const auto& node : orderd_nodes) {
     //TODO: implement forward
-    // node->forward(tensor_map_);
+    
+    const std::string& op_type = node->op_type;
+    LOG(INFO) << op_type;
   }
 }
 }

@@ -25,9 +25,11 @@ static void BM_GraphLoadAndRun(benchmark::State& state) {
 
     global_graph->PrintGraph();
 
-    std::ofstream out("graph.mmd");
-    global_graph->ExportToMermaid(out);
+    // std::ofstream out("graph.mmd");
+    // global_graph->ExportToMermaid(out);
     // global_graph->Run();
+
+    global_graph->Forward();
 
     google::protobuf::ShutdownProtobufLibrary();
   }
