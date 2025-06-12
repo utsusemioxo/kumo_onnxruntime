@@ -1,10 +1,8 @@
 #include <benchmark/benchmark.h>
 #include "graph.h"
-#include "executor.h"
 #include <fstream>
 #include <glog/logging.h>
 #include <memory>
-#include "tensor.h"
 #include <onnx/onnx.pb.h>
 
 static std::unique_ptr<kumo::Graph> global_graph;
@@ -16,7 +14,10 @@ static void BM_GraphLoadAndRun(benchmark::State& state) {
     if (!global_graph) {
       global_graph = std::make_unique<kumo::Graph>();
       bool success = global_graph->LoadFromONNX(
-        "/Users/mizuiro/dev/mini_infer/model/mlp/mini_mlp.onnx");
+        // "/Users/mizuiro/dev/mini_infer/model/mlp/mini_mlp.onnx"
+        // "/Users/mizuiro/dev/mini_infer/model/resnet18/resnet18_dummy.onnx"
+        "/Users/mizuiro/dev/mini_infer/model/mnist/mnist_cnn.onnx"
+      );
       if (!success) {
         LOG(FATAL) << "Failed to load model.";
       }

@@ -10,3 +10,9 @@ cd build_debug
 cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug ..
 ninja
 ```
+
+## notes
+
+my learning notes:
+
+[graph class design](./docs/graph.md)

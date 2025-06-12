@@ -6,6 +6,7 @@
 #include <glog/logging.h>
 #include <onnx/onnx.pb.h>
 #include <memory>
+#include <stdexcept>
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -21,6 +22,54 @@ bool Graph::LoadFromONNX(const std::string& onnx_path) {
 
   // convert nodes_
   const auto& graph_proto = model.graph();
+
+  // 1. Parse initializer -> TensorMap
+  for (const auto &initializer : graph_proto.initializer()) {
+    auto tensor = std::make_shared<Tensor>();
+    tensor->name = initializer.name();
+    tensor->shape = { initializer.dims().begin(), initializer.dims().end()};
+    tensor->dataType = onnx::TensorProto_DataType_Name(initializer.data_type());
+
+
+    if (initializer.data_type() == onnx::TensorProto::FLOAT) {
+      if (initializer.has_raw_data()) {
+        std::cout << "parse_raw_data byte size=" << initializer.raw_data().size() << std::endl;
+        const std::string& raw_data = initializer.raw_data();
+        size_t num_elements = 1;
+        for (int i = 0; i < initializer.dims_size(); ++i) {
+          num_elements *= initializer.dims(i);
+        }
+
+        // size check for safety
+        if (raw_data.size() != num_elements * sizeof(float)) {
+          throw std::runtime_error("raw_data size mismatch with tensor shape");
+        }
+
+        tensor->floatData.resize(num_elements);
+        std::memcpy(tensor->floatData.data(), raw_data.data(), raw_data.size());
+
+      } else if (initializer.float_data_size() > 0) {
+        std::cout << "parse float_data elem size=" << initializer.float_data_size() << std::endl;
+        tensor->floatData = {initializer.float_data().begin(), initializer.float_data().end()};
+
+      } else {
+        std::cout << "parse data type not support" << std::endl;
+      }
+    }
+
+    this->tensor_map_[tensor->name] = tensor;
+  }
+
+  // 2. parse input/output name
+  for (const auto &input : graph_proto.input()) {
+    this->input_names_.push_back(input.name());
+  }
+  
+  for (const auto &output : graph_proto.output()) {
+    this->output_names_.push_back(output.name());
+  }
+
+  // 3. parse nodes
   for (const auto& onnx_node : graph_proto.node()) {
     auto node = std::make_shared<Node>();
     node->name = onnx_node.name();

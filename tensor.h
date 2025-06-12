@@ -7,7 +7,8 @@ namespace kumo {
 struct Tensor {
   std::string name;
   std::vector<int> shape;
-  std::vector<float> data;
+  std::vector<float> floatData;
+  std::string dataType;
 
   Tensor() = default;
   Tensor(std::string name);

@@ -1,11 +1,7 @@
 #pragma once
-#include <memory>
 #include <string>
-#include <unordered_map>
 #include <vector>
 #include "onnx/onnx.pb.h"
-#include "tensor.h"
-#include <map>
 #include <glog/logging.h>
 
 namespace kumo {

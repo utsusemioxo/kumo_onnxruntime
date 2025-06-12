@@ -29,5 +29,7 @@ public:
 
   std::unordered_map<std::string, std::shared_ptr<Tensor>> tensor_map_;
   std::vector<std::shared_ptr<Node>> nodes_;
+  std::vector<std::string> input_names_;
+  std::vector<std::string> output_names_;
 };
 }

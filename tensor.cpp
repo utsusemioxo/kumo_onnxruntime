@@ -6,14 +6,14 @@ namespace kumo {
 Tensor::Tensor(std::string name) {
   
 }
-Tensor::Tensor(std::initializer_list<int> s) : shape(s), data() {
+Tensor::Tensor(std::initializer_list<int> s) : shape(s), floatData() {
   int size = 1;
   for (int dim : s) size *= dim;
-  data.resize(size);
+  floatData.resize(size);
 }
 
 void Tensor::fill(std::initializer_list<float> v) {
-  data.assign(v.begin(), v.end());
+  floatData.assign(v.begin(), v.end());
 }
 
 Tensor Tensor::matmul(const Tensor& other) const {
@@ -27,7 +27,7 @@ Tensor Tensor::add(const Tensor& other) const {
 }
 
 void Tensor::print() const {
-  for (float val : data) std::cout << val << " ";
+  for (float val : floatData) std::cout << val << " ";
   std::cout << std::endl;
 }
 
